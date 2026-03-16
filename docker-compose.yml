@@ -5,7 +5,6 @@
 #
 # Usage:
 #   docker compose up -d --build
-#   docker compose up -d --build   (to rebuild after a code change)
 
 version: "3.9"
 
@@ -19,9 +18,9 @@ services:
       args:
         VITE_API_BASE_URL: /api       # relative — nginx proxies /api to the API container
     networks:
-      - ai-club-api_default           # same network as ai-club-nginx and ai-club-api
+      - ai-club-net                   # same network as ai-club-nginx and ai-club-api
     # NOT exposed to host — the shared nginx proxies to this container internally
 
 networks:
-  ai-club-api_default:
-    external: true                    # created by the API compose (ai-club-api_default)
+  ai-club-net:
+    external: true                    # created by the API compose (ai-club-net)
