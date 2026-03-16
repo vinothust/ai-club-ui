@@ -19,9 +19,9 @@ services:
       args:
         VITE_API_BASE_URL: /api       # relative — nginx proxies /api to the API container
     networks:
-      - ai-club-net                   # same network as the API + nginx containers
+      - ai-club-api_default           # same network as ai-club-nginx and ai-club-api
     # NOT exposed to host — the shared nginx proxies to this container internally
 
 networks:
-  ai-club-net:
-    external: true                    # must already exist (created by the API compose)
+  ai-club-api_default:
+    external: true                    # created by the API compose (ai-club-api_default)
