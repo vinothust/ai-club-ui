@@ -77,19 +77,30 @@ export interface UseCase {
   account: string;
   project: string;
   description: string;
-  techStack: string[];
-  useCaseType: UseCaseType;
+  /** Comma-separated string as returned by the API */
+  techStack: string;
+  priority?: string;
+  customerType?: string;
+  /** Maps to the "usecase" field in the API response */
+  usecase: UseCaseType;
   status: UseCaseStatus;
-  loggedDate: string;
+  /** Maps to "useCaseLoggedDate" in the API response */
+  useCaseLoggedDate: string;
+  aging?: number;
   plannedEndDate: string;
   aiTechLead: string;
   podMembers: string;
-  useCaseOwner: string;
-  useCaseLeader: string;
-  podMembersRequired: string;
-  podMembersAssigned: string;
+  /** Maps to "usecaseOwner" in the API response */
+  usecaseOwner: string;
+  /** Maps to "usecaseLeader" in the API response */
+  usecaseLeader: string;
+  podMembersRequired: number;
+  /** Maps to "podMembersAllocated" in the API response */
+  podMembersAllocated: number;
   effort: string;
   comments: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type UserStatus = "Active" | "Inactive";

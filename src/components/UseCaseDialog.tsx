@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { UseCase, STATUS_OPTIONS, USE_CASE_TYPES, TECH_STACK_OPTIONS } from "@/types";
+import { UseCase, STATUS_OPTIONS, USE_CASE_TYPES } from "@/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
 
 interface Props {
   open: boolean;
@@ -21,23 +19,22 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
     account: "",
     project: "",
     description: "",
-    techStack: [],
-    useCaseType: "Customer solicited",
+    techStack: "",
+    usecase: "Customer solicited",
     status: "Use case finalization",
-    loggedDate: new Date().toISOString().split("T")[0],
+    useCaseLoggedDate: new Date().toISOString().split("T")[0],
     plannedEndDate: "",
     aiTechLead: "",
     podMembers: "",
-    useCaseOwner: "",
-    useCaseLeader: "",
-    podMembersRequired: "",
-    podMembersAssigned: "",
+    usecaseOwner: "",
+    usecaseLeader: "",
+    podMembersRequired: 0,
+    podMembersAllocated: 0,
     effort: "",
     comments: "",
   });
 
   const [techStackInput, setTechStackInput] = useState("");
-  const [showTechOptions, setShowTechOptions] = useState(false);
 
   useEffect(() => {
     if (useCase) {
@@ -47,17 +44,17 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
         account: "",
         project: "",
         description: "",
-        techStack: [],
-        useCaseType: "Customer solicited",
+        techStack: "",
+        usecase: "Customer solicited",
         status: "Use case finalization",
-        loggedDate: new Date().toISOString().split("T")[0],
+        useCaseLoggedDate: new Date().toISOString().split("T")[0],
         plannedEndDate: "",
         aiTechLead: "",
         podMembers: "",
-        useCaseOwner: "",
-        useCaseLeader: "",
-        podMembersRequired: "",
-        podMembersAssigned: "",
+        usecaseOwner: "",
+        usecaseLeader: "",
+        podMembersRequired: 0,
+        podMembersAllocated: 0,
         effort: "",
         comments: "",
       });
@@ -66,7 +63,7 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.account || !form.project || !form.status || !form.useCaseType) {
+    if (!form.account || !form.project || !form.status || !form.usecase) {
       alert("Please fill in required fields: Account, Project, Type, and Status");
       return;
     }
@@ -76,18 +73,6 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
 
   const updateField = (field: keyof UseCase, value: any) => {
     setForm((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const toggleTechStack = (tech: string) => {
-    const currentStack = form.techStack || [];
-    if (currentStack.includes(tech)) {
-      updateField(
-        "techStack",
-        currentStack.filter((t) => t !== tech)
-      );
-    } else {
-      updateField("techStack", [...currentStack, tech]);
-    }
   };
 
   return (
@@ -139,11 +124,11 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
           {/* Type and Status */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="useCaseType">
+              <Label htmlFor="usecase">
                 Use Case Type <span className="text-destructive">*</span>
               </Label>
-              <Select value={form.useCaseType} onValueChange={(v) => updateField("useCaseType", v)}>
-                <SelectTrigger id="useCaseType">
+              <Select value={form.usecase} onValueChange={(v) => updateField("usecase", v)}>
+                <SelectTrigger id="usecase">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -177,71 +162,24 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
 
           {/* Tech Stack */}
           <div className="space-y-2">
-            <Label>Tech Stack</Label>
-            <div className="relative">
-              <div
-                className="flex flex-wrap gap-2 min-h-[40px] p-2 border rounded-md cursor-pointer"
-                onClick={() => setShowTechOptions(!showTechOptions)}
-              >
-                {form.techStack && form.techStack.length > 0 ? (
-                  form.techStack.map((tech) => (
-                    <Badge key={tech} variant="secondary" className="gap-1">
-                      {tech}
-                      <X
-                        className="h-3 w-3 cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleTechStack(tech);
-                        }}
-                      />
-                    </Badge>
-                  ))
-                ) : (
-                  <span className="text-muted-foreground text-sm">Select tech stack...</span>
-                )}
-              </div>
-              {showTechOptions && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-50 max-h-48 overflow-y-auto">
-                  {TECH_STACK_OPTIONS.map((tech) => {
-                    const isSelected = form.techStack?.includes(tech);
-                    return (
-                      <div
-                        key={tech}
-                        className="px-3 py-2 hover:bg-muted cursor-pointer flex items-center gap-2"
-                        onClick={() => toggleTechStack(tech)}
-                      >
-                        <div className={`w-4 h-4 border rounded ${isSelected ? "bg-primary border-primary" : ""}`}>
-                          {isSelected && <span className="text-primary-foreground text-xs">✓</span>}
-                        </div>
-                        <span className="text-sm">{tech}</span>
-                      </div>
-                    );
-                  })}
-                  <div className="p-2 border-t">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="w-full"
-                      onClick={() => setShowTechOptions(false)}
-                    >
-                      Done
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <Label htmlFor="techStack">Tech Stack</Label>
+            <Input
+              id="techStack"
+              value={form.techStack as string}
+              onChange={(e) => updateField("techStack", e.target.value)}
+              placeholder="e.g. React, AWS Bedrock, GPT-4"
+            />
           </div>
 
           {/* Dates */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="loggedDate">Logged Date</Label>
+              <Label htmlFor="useCaseLoggedDate">Logged Date</Label>
               <Input
-                id="loggedDate"
+                id="useCaseLoggedDate"
                 type="date"
-                value={form.loggedDate}
-                onChange={(e) => updateField("loggedDate", e.target.value)}
+                value={form.useCaseLoggedDate}
+                onChange={(e) => updateField("useCaseLoggedDate", e.target.value)}
               />
             </div>
 
@@ -269,11 +207,11 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="useCaseOwner">Use Case Owner</Label>
+              <Label htmlFor="usecaseOwner">Use Case Owner</Label>
               <Input
-                id="useCaseOwner"
-                value={form.useCaseOwner}
-                onChange={(e) => updateField("useCaseOwner", e.target.value)}
+                id="usecaseOwner"
+                value={form.usecaseOwner}
+                onChange={(e) => updateField("usecaseOwner", e.target.value)}
                 placeholder="Name"
               />
             </div>
@@ -281,11 +219,11 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="useCaseLeader">Use Case Leader</Label>
+              <Label htmlFor="usecaseLeader">Use Case Leader</Label>
               <Input
-                id="useCaseLeader"
-                value={form.useCaseLeader}
-                onChange={(e) => updateField("useCaseLeader", e.target.value)}
+                id="usecaseLeader"
+                value={form.usecaseLeader}
+                onChange={(e) => updateField("usecaseLeader", e.target.value)}
                 placeholder="Name"
               />
             </div>
@@ -319,18 +257,18 @@ export function UseCaseDialog({ open, onOpenChange, useCase, onSave }: Props) {
                 type="number"
                 min="0"
                 value={form.podMembersRequired}
-                onChange={(e) => updateField("podMembersRequired", e.target.value)}
+                onChange={(e) => updateField("podMembersRequired", parseInt(e.target.value) || 0)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="podMembersAssigned"># POD Members Assigned</Label>
+              <Label htmlFor="podMembersAllocated"># POD Members Allocated</Label>
               <Input
-                id="podMembersAssigned"
+                id="podMembersAllocated"
                 type="number"
                 min="0"
-                value={form.podMembersAssigned}
-                onChange={(e) => updateField("podMembersAssigned", e.target.value)}
+                value={form.podMembersAllocated}
+                onChange={(e) => updateField("podMembersAllocated", parseInt(e.target.value) || 0)}
               />
             </div>
           </div>

@@ -55,11 +55,11 @@ function buildAccountSummaries(useCases: UseCase[]): AccountSummary[] {
       const overdue = ucs.filter(
         (u) => u.plannedEndDate && new Date(u.plannedEndDate) < now && !TERMINAL.includes(u.status)
       );
-      const ages = active.map((u) => daysSince(u.loggedDate)).filter(Boolean);
+      const ages = active.map((u) => daysSince(u.useCaseLoggedDate)).filter(Boolean);
       const avgAge = ages.length ? Math.round(ages.reduce((a, b) => a + b, 0) / ages.length) : 0;
       const types: Record<string, number> = {};
       ucs.forEach((u) => {
-        types[u.useCaseType] = (types[u.useCaseType] || 0) + 1;
+        types[u.usecase] = (types[u.usecase] || 0) + 1;
       });
       return { account, total: ucs.length, active: active.length, completed: completed.length, onHold: onHold.length, cancelled: cancelled.length, overdue: overdue.length, avgAge, types };
     })
@@ -119,20 +119,20 @@ function identifyRisks(useCases: UseCase[]): RiskItem[] {
     }
 
     // Aging without progress
-    const age = daysSince(uc.loggedDate);
+    const age = daysSince(uc.useCaseLoggedDate);
     if (age > 60 && uc.status === "Use case finalization") {
       risks.push(`In finalization for ${age} days`);
     }
 
     // Under-staffed
-    const required = parseInt(uc.podMembersRequired) || 0;
-    const assigned = parseInt(uc.podMembersAssigned) || 0;
+    const required = Number(uc.podMembersRequired) || 0;
+    const assigned = Number(uc.podMembersAllocated) || 0;
     if (required > 0 && assigned < required) {
       risks.push(`Under-staffed: ${assigned}/${required} POD members`);
     }
 
     // No owner
-    if (!uc.useCaseOwner || uc.useCaseOwner === "NA") {
+    if (!uc.usecaseOwner || uc.usecaseOwner === "NA") {
       risks.push("No owner assigned");
     }
 
@@ -174,13 +174,13 @@ function buildVelocity(useCases: UseCase[]): WeekBucket[] {
     const weekEnd = new Date(now.getTime() - i * 7 * 86400000);
     const label = `${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
     const added = useCases.filter((uc) => {
-      const d = new Date(uc.loggedDate);
+      const d = new Date(uc.useCaseLoggedDate);
       return d >= weekStart && d < weekEnd;
     }).length;
     // completed = moved to terminal status (approximate — we check logged date for demo)
     const completed = useCases.filter((uc) => {
       if (!TERMINAL.includes(uc.status) || uc.status === "Cancelled") return false;
-      const d = new Date(uc.loggedDate);
+      const d = new Date(uc.useCaseLoggedDate);
       return d >= weekStart && d < weekEnd;
     }).length;
     buckets.push({ label, added, completed });
@@ -201,8 +201,8 @@ export default function ManagerInsights() {
 
   const topStats = useMemo(() => {
     const active = useCases.filter((u) => !TERMINAL.includes(u.status));
-    const totalRequired = active.reduce((s, u) => s + (parseInt(u.podMembersRequired) || 0), 0);
-    const totalAssigned = active.reduce((s, u) => s + (parseInt(u.podMembersAssigned) || 0), 0);
+    const totalRequired = active.reduce((s, u) => s + (Number(u.podMembersRequired) || 0), 0);
+    const totalAssigned = active.reduce((s, u) => s + (Number(u.podMembersAllocated) || 0), 0);
     return {
       totalAccounts: accounts.length,
       totalLeads: leads.length,
@@ -420,7 +420,7 @@ export default function ManagerInsights() {
                           <TableCell className="font-medium">{item.uc.account}</TableCell>
                           <TableCell className="max-w-[200px] truncate">{item.uc.project}</TableCell>
                           <TableCell><StatusBadge status={item.uc.status} /></TableCell>
-                          <TableCell className="text-muted-foreground">{item.uc.useCaseOwner || "—"}</TableCell>
+                          <TableCell className="text-muted-foreground">{item.uc.usecaseOwner || "—"}</TableCell>
                           <TableCell>
                             <div className="space-y-0.5">
                               {item.risks.map((r, j) => (

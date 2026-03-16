@@ -53,18 +53,18 @@ export default function Report() {
 
     useCases.forEach((uc) => {
       if (uc.status) byStatus[uc.status] = (byStatus[uc.status] || 0) + 1;
-      if (uc.useCaseType) byType[uc.useCaseType] = (byType[uc.useCaseType] || 0) + 1;
+      if (uc.usecase) byType[uc.usecase] = (byType[uc.usecase] || 0) + 1;
     });
 
     const aging = useCases.filter(
-      (uc) => !terminal.includes(uc.status) && daysSince(uc.loggedDate) > 30
+      (uc) => !terminal.includes(uc.status) && daysSince(uc.useCaseLoggedDate) > 30
     );
 
     return {
       total: useCases.length,
-      newThisWeek: useCases.filter((uc) => new Date(uc.loggedDate) >= weekAgo).length,
+      newThisWeek: useCases.filter((uc) => new Date(uc.useCaseLoggedDate) >= weekAgo).length,
       stuckThisWeek: useCases.filter(
-        (uc) => daysSince(uc.loggedDate) > 7 && !terminal.includes(uc.status)
+        (uc) => daysSince(uc.useCaseLoggedDate) > 7 && !terminal.includes(uc.status)
       ).length,
       overdue: useCases.filter(
         (uc) =>
@@ -266,7 +266,7 @@ export default function Report() {
                   </TableHeader>
                   <TableBody>
                     {analytics.aging.map((uc) => {
-                      const age = daysSince(uc.loggedDate);
+                      const age = daysSince(uc.useCaseLoggedDate);
                       const ageColor =
                         age > 60
                           ? "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200"
@@ -295,10 +295,10 @@ export default function Report() {
                             </Badge>
                           </TableCell>
                           <TableCell className="text-muted-foreground">
-                            {uc.useCaseOwner}
+                            {uc.usecaseOwner}
                           </TableCell>
                           <TableCell className="text-muted-foreground">
-                            {uc.loggedDate}
+                            {uc.useCaseLoggedDate}
                           </TableCell>
                           <TableCell>
                             <Badge className={ageColor}>{age} days</Badge>
