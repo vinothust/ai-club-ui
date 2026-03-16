@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode } from "react";
 import { Role } from "@/types";
+import { useAuth } from "./AuthContext";
 
 interface RoleContextType {
   role: Role;
-  setRole: (role: Role) => void;
   canEdit: boolean;
   canManageUsers: boolean;
 }
@@ -11,13 +11,14 @@ interface RoleContextType {
 const RoleContext = createContext<RoleContextType | null>(null);
 
 export function RoleProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<Role>("admin");
+  const { user } = useAuth();
+  const role = user?.role || "viewer";
 
   const canEdit = role === "editor" || role === "admin";
   const canManageUsers = role === "admin";
 
   return (
-    <RoleContext.Provider value={{ role, setRole, canEdit, canManageUsers }}>
+    <RoleContext.Provider value={{ role, canEdit, canManageUsers }}>
       {children}
     </RoleContext.Provider>
   );

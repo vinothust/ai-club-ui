@@ -1,0 +1,284 @@
+Sl.No,Account,Project,Description,Tech Stack,Priority,"Customer
+/Internal",Usecase,Status,"Use Case 
+Logged date","Planned
+ End Date",AI Tech Lead,POD Members,Usecase Owner,Usecase Leader,"#POD Members 
+Required","POD Members
+Allocated","Effort 
+(Hrs)",Pra,,,,,,,
+1,BCBSA,Customer feedback Analysis Dashboard,"Dashboard to analyze monthly customer feedback, generate trend metrics, and derive meaningful, data-driven insights from written comments provided by Client. The AI solution performs sentiment analysis, highlights key areas of improvement, recommends relevant actions, and enables automated triggering of those actions. The platform follows a closed-loop feedback approach, ensuring each actionable insight is addressed with appropriate resolutions.",React for UI/AWS services & Bedrock for LLM,High,Customer,Unsolicited,Rework after UST Demo,8/Dec/25,10/Mar/26,Ben Venancy (Data Services),"1. Ben Venancy
+2. Prithvi Jayakumar 
+3. Sai Ravula Pinninti",Vivek James,Vivek James,3,3,1036.8,"Mar 2: Next demo planned for Mar 10th
+Feb 17: Demo conducted on Feb 13, team working on the feedback, will publish the dashboard and roll out by Feb 23
+12-02-2026 : 80% dev completed, next demo planned for Feb 13th
+09-02-2-26 : Today we are having a internal demo among ourTeam to finalize. After that we will set up a call to Demo to Sundeep and Vivek by Feb 11.
+29-01-2026 : Demo with Sundeep and Vivek completed.Need to work on feedback. ETA - Feb9
+Jan 16: Next demo planned for Jan 23
+Jan 12:Dev 60% completed, interim demo planned for Jan 15
+Dec 23: Walkthrough the Data services team conducted on Dec 10th, shared source files and sample sheets for reference. Data sevices team is working on the development",,,,,,,Usecase Finalization
+2,BCBSA,"Automated Data Pipeline (Applicable for FEP business) 
+","When a new vendor, such as Livongo or Abbott for diabetic care, is added, FEP creates a project to build a pipeline that provides these companies with the necessary information. This includes codeless data pipeline setup and updating",NA,Medium,Customer,Unsolicited,Cancelled,8/Dec/25,NA,NA,NA,Vivek James,NA,NA,NA,NA,"Feb 12: John Koshy: This use case specific to FEP was discussed earlier and was shelved because all the data pipelines in FEP are done using Ab Initio graphs and there is no AI that will generate Ab Initio graphs since it is proprietary technology. Once FEP moves to AWS-native cloud technologies, then we can use automated data pipelines. Until then, this use case is a no-go for FEP. 
+Feb 9: Sudhindra checking on data inputs
+Jan  30: Connected Shiji's team with Sudhindra
+Dec 15: Conducted meet with Pravinth to explain the Use case",,,,,,,Development
+3,BCBSA,Proactive Data Validation (Data Anomaly detection),"BCBSA receives and consolidates a lot of data from the Blue Plans, including provider data, claims data, benefit data, etc. Although BCBSA does not own this data and cannot edit or correct it, they perform basic validation. Based on this, the following use cases are created:
+•	Ability to flag suspect data in the datasets.
+•	Ability for users to view the suspect data based on severity.
+•	Communicate the suspect data back to the plan for correction",TBD,Medium,Customer,Unsolicited,Demo Completed - UST,8/Dec/25,TBD,TBD,TBD,Vivek James,,,,TBD,"18-02-2026 : Internal Demo conducted
+12-02-2026 : Have a connect with Pravinth and other leaders for checking the feasibility. ETA : 2/18
+Dec 15: Conducted meet with Pravinth to explain the Use case",Swarnendu Khan,,,,,,Demo Completed - Client
+4,BCBSA,Insights from Plan,"BCBSA has been trying to build an intelligence and insights platform for some time now. Based on the data supplied by the Blue Plans, we can generate insights for BCBSA. These insights can be used for continuous improvement and can also be provided to the Blue Plans for marketing, product design, and customer satisfaction",TBD,Medium,Customer,Unsolicited,On Hold,8/Dec/25,TBD,TBD,TBD,Vivek James,Vivek James,TBD,TBD,TBD,"05-03-2026 : Putting this on hold till we get details from Pravinth. Sundeep will check with Pravinth
+18-02-2026 : Use case is not clear. Need more details.
+12-02-2026 : Have a connect with Pravinth and other leaders for checking the feasibility. ETA : 2/18
+Dec 15: Conducted meet with Pravinth to explain the Use case",Anand Govindan,,,,,,Demo Completed - UST
+5,BCBSA,Onboarding New Plans to BCBSA ,"Problem Statement: BCBSA has currently onboarded 67 plans. As part of ongoing business expansion, BCBS frequently acquires smaller organizations that must be integrated into BCBSA. Each onboarding involves a defined set of instructions and repetitive tasks that must be completed to ensure successful integration to backend metadata repositories (creating new tables, populate plan level details to those tables). Once a plan is onboarded, it can begin submitting its monthly data to BCBSA.
+At present, this onboarding process is fully manual and spans from development through production deployment, making it both time consuming and error prone. By automating the process, development effort for creating tables can be significantly reduced, while also eliminating the risk of manual errors. Through AI, enabled to generate metadata which is compliant to databricks technology, also identify any possible errors in metadata provided by business. AI is adopted to validate and deploy the metadata to target systems.
+Expecting savings of approx 150 hours of work for each new Plan onboarding (around 1 per quarter)","Backend: Python, Flask, openpyxl
+Frontend: React, Vite, Axios
+Database target: Databricks SQL (generated output)",Medium,Customer,Unsolicited,Rework after UST Demo,30/Jan/26,6/Mar/26,Nirmal Jayasingh(Data Services),"1. Nirmal Jayasingh
+2. Vishnu Kuruppath",Sudhindra Reddy,Sudhindra Reddy,2,2,TBD,"Mar 6: Demo with onshore team on Mar 6
+Mar 2: Next demo planned on Mar 5
+Feb 25: Completed the demo on Feb 20 and feedback shared, team is working to close them, next demo scheduled for Feb 26
+Feb 17: Demo conducted on Feb 13. Working on incorporating feedback
+12-02-2026: Shared the architecture flow daigram to Data team and gave inputs to see how AI can be incorporated in automating data pipeline. Next demo scheduled for Feb 13
+Feb 9: No AI components, Nirmal to connect with Sudhindra on Feb 10
+Jan 30: New item added, POC - Sudhindra. Explained same to Data Services on Jan 30","Only automation
+Need to prioritize one",,,,,,Demo Scheduled - Client
+6,BCBSA,Automated Test Case Generation,"The test case format at BCBSA is highly detailed and exhaustive, requiring QA teams to spend significant time drafting and ensuring compliance with the prescribed structure. Currently, test case creation is a manual, text heavy process prone to typographical errors and inconsistencies with BCBSA standards. This focus on formatting often causes testers to overlook important functional scenarios.
+By automating test case generation to align with BCBSA standards, QA teams can save considerable time and effort, reduce errors, and ensure comprehensive coverage of functional requirements. AI is adopted to perform semantic test case writing and validate against requirements.
+Expecting saving of 70 hours/ month for a single member testing team, during the test case preparation phase","Python 3.9+, Flask, React (Vite), Azure OpenAI, Pydantic v2, openpyxl. No database - in-memory sessions.",Medium,Customer,Unsolicited,Rework after UST Demo,30/Jan/26,6/Mar/26,Nirmal Jayasingh(Data Services),"1. Nirmal Jayasingh
+2. Vishnu Kuruppath",Sudhindra Reddy,Sudhindra Reddy,2,2,TBD,"Mar 6: Comparing the results from QE360 and POC.
+05-03-2026 : May get cancelled, Vivek will update
+Mar 2: Next demo planned on Mar 5
+Feb 25: Completed the demo on Feb 20 and feedback shared, team is working to close them, next demo scheduled for Feb 26
+Feb 17: Demo conducted on Feb 13. Working on incorporating feedback
+12-02-2026  :  Use case details shared to Data team on Feb 10, development in progress, prototype demo planned for Feb 13
+Feb 9: Next connect scheduled for Feb 10, further steps to be finalized after that.
+Jan 30: New item added, POC - Sudhindra. Explained same to Data Services on Jan 30","Have AI
+Need to prioritize one",,,,,,Demo Scheduled - UST
+7,BCBSA,Automated Certificate Renewal,"According to BCBSA InfoSec policy, client certificates are valid for one year. Prior to expiration, the Apigee administration team manually uploads renewed certificates to SharePoint. If a renewed certificate is not properly installed on client applications, those applications fail with hard errors. Such failures in critical BCBSA systems can disrupt data delivery and impact SLA commitments.
+Automating the certificate renewal process eliminates dependency on production personnel, reduces manual effort, and ensures timely updates. This prevents application failures during processing and safeguards continuity of data delivery. AI is utilized to perform intelligent search based on application owners and certificate names and integrate alert notification via MS Outlook.","Backend: Python 3.9+, FastAPI
+Parsing: pandas + openpyxl
+Storage: SQLite
+Email: Gmail API (OAuth))
+
+Frontend: React + Vite
+Validation: Pydantic
+Environment config: .env based",Medium,Customer,Unsolicited,Rework after UST Demo,30/Jan/26,6/Mar/26,Nirmal Jayasingh(Data Services),Abhisekh Ajith,Sudhindra Reddy,Sudhindra Reddy,2,2,TBD,"Mar 6: Demo with onshore team on Mar 6
+Mar 2: Next demo planned on Mar 5
+Feb 25: Completed the demo on Feb 20 and feedback shared, team is working to close them, next demo scheduled for Feb 26
+Feb 17: Demo conducted on Feb 13. Working on incorporating feedback
+12-02-2026: Detailed requirements shared to Data team on Feb 10th, in the requirement analysis phase.
+Feb 9: No AI components, Nirmal to connect with Sudhindra on Feb 10
+Jan 30: New item added, POC - Sudhindra. Explained same to Data Services on Jan 30","Have AI
+Need to prioritize one",,,,,,Demo Slot Awaited - Client
+8,IBC,IDR and Negotiation Automation ," AI-powered Independent Dispute Resolution and Negotiation solution that leverages predictive analytics, NLP, and automation to streamline fair claim settlements, detect fraud, and enhance decision-making efficiency ","React, Python, GCP and Vertex AI",High,Customer,Unsolicited,Rework after UST Demo,1/Nov/25,21/Jan/26,Vinoth Sasikumar ,"1. Sramona Senguptha 
+2.Megha Saji","NavaneethaKrishnan Ramasamy 
+(Onshore)",Sundeep Vijayanathan,2,2,TBD,"26-02-2026 : Client POC in progress. Have some access issues. Working with AI Governance team to resolve this. ETA for Client demo : Mar 3rd week.
+12-02-2026 : Client requested to create the POC in customer enviroment.  ETA to complete the POC in Client env 20-Feb
+23-01-2026 : Demo to customer is pending.  Awaiting customer slot for demo from Navaneetha. Once client demo is completed, project will be started in client environment.
+
+Demo walkthrough call has been Postponed and got a confirmation to kick start the project in baseline. ",,,,,,,On Hold
+9,IBC,FinSight ,"Gen AI–powered Financial Insight application that analyzes PIP, P&L, and forecast documents to automatically detect discrepancies, uncover root causes, and deliver actionable insights for informed decision-making","React, Python/ NodeJS, LangChain, PostgresSQL, PGVector, OLLAMA with Mistral-NeMo",High,Internal,Internal,Demo Scheduled - UST,1/Nov/25,21/Jan/26,Vinoth Sasikumar,"1. Vasantha Kumar 2. Kaviraj Natarajan
+3. Allen Bose",Sundeep Vijayanathan,Sundeep Vijayanathan,4,3,TBD,"26-02-2026 : Testing done by other POD members and shared observations. Working on optimization of app performance and results. ETA : 6-Mar
+12-02-2026 : Demo scheduled on 16-Feb. Demo Cancelled
+02-02-2026 : Rework on Feedback for demo conducted today. Demo ETA - 9-Feb
+23-01-2026 : Feedback rework updates will be completed by 28-Jan and will be ready for Demo.
+Initial demo has been completed with Neeta and Sundeep. Working on the feedbacks.",,,,,,,Rework after Client Demo
+10,IBC,BPO - Provider Inquiry - Categorization of Inquiries,Business operations team categorizes inquiries coming via Pear Portal manually as of now (reading through and chanelizing it). Researching to see if some AI solution can be provided,Yet to finalize ,High,Internal,Internal,Cancelled,1/Nov/25,NA,Sudha Narayanaswamy,"1. Abhinand Arun 2. Noel John
+3. Sanyo Shan",Rakhee Ramadevi ,Sundeep Vijayanathan,TBD,TBD,TBD,"02-02-2026 : Customer already intiated this use case. Therefore this is cancelled.
+28-01-2026 : Sudha will work with Nikhil to get the requirements. Sudha will connect with Nikhil on 29-Jan to understand the current work flow. Based on that requirements will be finalized - ETA Feb-3.
+23-01-2026 : Awaiting requirements and  how the current system works from Nikhil and his team. Need to check with Sudha to get latest update",,,,,,,Rework after UST Demo
+11,IBC,BPO - Provider Inquiry - Denied claim review and process Automation,Business operations team does multiple manual tasks to review and process denied claims on a daily basis. This initiative will help to reduce the time/effort/process on reduntant tasks with automation and so that same time/effor can utilized in other needed areas.,Yet to finalize ,Low,Internal,Internal,Cancelled,1/Nov/25,NA,Sudha Narayanaswamy,"1. Abhinand Arun 2. Noel John
+3. Sanyo Shan",Rakhee Ramadevi ,Sundeep Vijayanathan,TBD,TBD,TBD,"28-01-2026 : This is on hold since this is not AI automation. 
+23-01-2026 : Awaiting requirements and  how the current system works from Nikhil and his team. Need to check with Sudha to get latest update",,,,,,,SOW Approved
+12,IBC,MedPolicy SmartSearch,"Providers struggle to find accurate policy details because information is scattered, inconsistent, and hard to search. A generative-AI knowledge base unifies all policy documents and enables natural, conversational queries. This delivers precise answers quickly, helping providers reduce administrative work and make faster, more informed decisions.","React, Python, GCP and Vertex AI",High,Customer,Solicited,Demo Completed - Client,1/Nov/25,TBD,Meenu Mary,"1. Sekhar Bestha
+2. Noel John",Sarath Krishnakumar,Sundeep Vijayanathan,2,2,TBD,"05-03-2026 : Customer has a meeting with Infrastructure admin team March 20th. As soon as funding will be approved, Dev will start.
+26-02-2026 : Customer has a meeting with Infrastructure admin team. As soon as funding will be approved, Dev will start.
+12-02-2026 : Customer is ready to implement the solution, and will start once the funding is identified. Mike(customer) and Team will be meeting COE team for further discussions.
+02-02-2026 : Same as below. Need to fast track this.
+28-01-2026 : Demo completed with the customer. Client to give a goahead to iniate the project. Supported by Data services team.
+Three Demos  completed with Satish, Mike Hess, Kumar Abhishek and Mark Taylor.
+Satish will have internal discussion with Mike and they will let us know the next steps like estimation prepration.",,,,,,,Cancelled
+13,IBC,AI-Powered Prior Authorization Platform,"An AI-powered pre-authorization platform streamlines and automates the entire approval workflow. It extracts clinical information from patient records, identifies required documentation, and generates complete pre-authorization submissions automatically. AI models evaluate insurer guidelines, predict approval likelihood, flag missing data, and route cases that truly need human review. Real-time monitoring provides transparency for providers and patients, while insurers can use AI to speed up medical necessity checks with consistent, evidence-based decisions.
+","React, Python, TensorFlow, Hugging Face Transformers, LangChain, Open Policy Agent, PostgreSQL, PGVector, OLLAMA with GPT-OSS/ Mistral/ PHI-3",Medium,Internal,Internal,On Hold,1/Nov/25,TBD,Vinoth Sasikumar,"1. Abhinand Arun 2. Noel John
+3. Sanyo Shan",Rejath Rajeev,Sundeep Vijayanathan,3,3,TBD,"26-02-2026 : Customer has a meeting with Infrastructure admin team March 20th. As soon as funding will be approved, Dev will start.",,,,,,,
+14,IBC,"Claim Document Fraud Detection 
+(i - Clinical guideline Repo creation,
+ii - Fraud data repo for ranking
+iii - Analysis of Claim documents for fraud detection)","Verify the reimbursement claim details using the available treatment
+codes in detecting upcoding, unbundling, up billing and other medical
+frauds . AI can be used to check if the claim is legitimate or not. ","React (Vite + TypeScript)
+FastAPI
+Gemini 2.5 Flash
+Vertex AI Embeddings
+Vertex AI Vector Search
+LangChain on Vertex AI",Medium,Internal,Internal,On Hold,1/Nov/25,TBD,Dhanya Ravindran,"1. Abhinand Arun
+2. Sanyo Shan",Dhanya Ravindran,Sundeep Vijayanathan,TBD,TBD,TBD,"05-03-2026 : OnHold due to bandwidth issue
+16-02-2026: Connected with Vinoth. Draft requirement documentation completed.
+12-02-2026 : Will be connecting with Vinoth for help.
+28-01-2026 : Requirement gathering in progress for guideline repo POC. ETA - Feb-3.
+Started working on requirement gathering for guideline repo PoC.",,,,,,,
+15,IBC,2025 IBC QRM Business Operations,A knowledge based agent that specializes with Risk adjustment coding queries. ,TBD,Medium,Customer,Unsolicited,Demo Scheduled - UST,10/Feb/26,TBD,Vinoth Sasikumar ,1. Yuvraj Singh Chuhan,Michael Gonzales,Rakhee Remadevi,4,2,TBD,"26-02-2026: POC has been completed. Working on unit testing and planned to schedule a demo with Micheal on 27-02-2026.
+20-02-2026: POC work in progress. Naseer has to confirm the POD members",,,,,,,
+16,IBC,2025 IBC QRM Business Operations,"An application to manage day to day updates and guidelines. To distinguish the conflicting and repetitive ones,seregation of updated topics/guidelines to each specific disease process",TBD,Medium,Customer,Unsolicited,Demo Scheduled - UST,10/Feb/26,TBD,Vinoth Sasikumar ,1.Yuvraj Singh Chuhan,Michael Gonzales,Rakhee Remadevi,4,2,TBD,"26-02-2026: POC has been completed. Working on unit testing and planned to schedule a demo with Micheal on 27-02-2026.
+20-02-2026: POC work in progress. Naseer has to confirm the POD members",,,,,,,
+17,IBC,2026 IBC Call Center & Claims,"
+Ask a question; see a short answer with exact PDF passages, page links, document contents, screenshots from IBC resources
+Search by terms, member plan, policy, date, state, or line of business.
+See what changed recently and what is most used.
+Flag content issues; suggest updates.",TBD,Medium,Customer,Unsolicited,Demo Scheduled - UST,10/Feb/26,TBD,Vinoth Sasikumar ,1.Yuvraj Singh Chuhan,Michael Gonzales,Rakhee Remadevi,4,2,TBD,"26-02-2026: POC has been completed. Working on unit testing and planned to schedule a demo with Micheal on 27-02-2026.
+20-02-2026: POC work in progress. Naseer has to confirm the POD members",,,,,,,
+18,IBC,2023 IBC UM Intake Services,A web application that identifies if requested CPT code requires precertification,TBD,Medium,Customer,Unsolicited,Demo Scheduled - UST,10/Feb/26,TBD,Vinoth Sasikumar ,1. Yuvraj Singh Chuhan,Michael Gonzales,Rakhee Remadevi,4,2,TBD,"26-02-2026: POC has been completed. Working on unit testing and planned to schedule a demo with Micheal on 27-02-2026.
+20-02-2026: POC work in progress. Naseer has to confirm the POD members",,,,,,,
+19,IBC,PPS - AI Automated Template Processing,Leveraging AI to solve problem where external users are unable to access PPS to submit input forms.,TBD,TBD,Customer,Unsolicited,Development,11/Feb/26,TBD,Meenu Mary,Sekhar Bestha,Vivek Neelkanth,Sundeep Vijayanathan,TBD,TBD,TBD,"5/3/2026: Met with another team in IBC who did a similar POC. We will share some sample pps data for them to test in their POC.
+2/26/2026: This week we have a meeting with another team in IBC who did a similar POC to check if we can reuse anything.
+12-02-2026 : Had initila discussion with Mike.
+ As per his directions, we submitted Usecase for AI COE review from IBC. Need to get a feedback froma  COE team as next step.",,,,,,,
+20,IBC,PPS - AI - Driven Policy Change Highlighter,"Use AI to automatically identify and highlight changes between policy versions with a single click, reviewers can see exactly where updates have been made, significantly reducing manual caparison effort.",TBD,TBD,Customer,Unsolicited,Development,11/Feb/26,TBD,Meenu Mary,Sekhar Bestha,Vivek Neelkanth,Sundeep Vijayanathan,TBD,TBD,TBD,"5/3/2026: POC inprogress.
+2/26/2026: Met with Business team to get more requirements on this. They are very much interested if we can find a solution for this problem. Mike Hess( customer) told us to do the POC.
+
+2/17/2026: After the initial review client manager Mike Hess did not pick this use case for IBC -  AI COE review henc putting this on hold.",,,,,,,
+21,IBC,PPS- AI assisted Meeting Minutes Summarization in predefined  format.,"Utilizing AI to summarize and fomat the MS Teams meeting transcripts according to the predefined format. Summaries will then undergo manual review before being added to the official MOM or presered for audit and compliance purposes.
+Users upload the meeting transcripts to PPS which gets perocessed by the AI tool and after approval gets populated to the furrent MOM template.",TBD,TBD,Customer,Unsolicited,On Hold,11/Feb/26,TBD,Meenu Mary,Sekhar Bestha,Vivek Neelkanth,Sundeep Vijayanathan,,,TBD,"2/26/2026: According to Mike Hess, w might review this again as per bandwidth.
+2/17/2026: After the initial review client manager Mike Hess did not pick this use case for IBC -  AI COE review henc putting this on hold.",,,,,,,
+22,IBC,PPS - Implement AI search bot using MS Copilot Studio in internal PPS and POlicy retirement workflow.,"Integrate AI search bot into internal policy page ro provide intelligent, higly accurate search capabilities, improving discoverability of policy content for users. Also, user can retire policies using the same bot.",TBD,TBD,Customer,Unsolicited,On Hold,11/Feb/26,TBD,Meenu Mary,Sekhar Bestha,Vivek Neelkanth,Sundeep Vijayanathan,,,TBD,"2/26/2026: According to Mike Hess, w might review this again as per bandwidth.
+2/17/2026: After the initial review client manager Mike Hess did not pick this use case for IBC -  AI COE review henc putting this on hold.",,,,,,,
+23,IBC,PPS - Utilize AI chatbot for workflow assistance and guiding users.,"Implement an AI chatbot that serves as an intelligent workflow assistant for internal users. The chatbot guides through proceses, annswers questions, provides step-by-step instructions, and proactively reduces operational friction by recommending next actions, escalating excep[tions and ensuring workflow compliance.",TBD,TBD,Customer,Unsolicited,On Hold,11/Feb/26,TBD,Meenu Mary,Sekhar Bestha,Vivek Neelkanth,Sundeep Vijayanathan,,,TBD,"2/26/2026: According to Mike Hess, w might review this again as per bandwidth.
+2/17/2026: After the initial review client manager Mike Hess did not pick this use case for IBC -  AI COE review henc putting this on hold.",,,,,,,
+24,IBC,PNS-Account Reconciliation AI solution,Leveraging AI to solve account reconciliation issues with Providers. Helps PNS team to respond to Provider queries in a faster efficient way.,"React, Python, GCP and Vertex AI",Medium,Customer,Solicited,Development,13/Feb/26,TBD,Dhanya Ravindran,TBD,Arijeet Kumar Ghosh/Dhanya Ravindran,Sundeep Vijayanathan,TBD,TBD,TBD,"26-02-2026 : Proposal is with customer and waiting response from customer if we can goahead with this use case.
+18-02-2026 : Rakhee will talk to Dhanya
+16-02-2026:  Had initial discussions with Business and Vinoo Thomas. We need to work on a POC on agentic workflow to demo.",,,,,,,
+25,IBC,"QRM HCC Risk Adjustment ""Code Cart Checkout""","An ICD-10 web application with index, reverse index, tabular, and guidelines look up. Includes common MEAT/TAMPER, HCC values for MA and HIX/ACA Commercial. Has the functionality to filter out code choices based on guidelines, specificity, excludes, and conflicts. Provides justification for code choices upon validate and checkout.",TBD,High,Customer,Unsolicited,Usecase Finalization,17/Feb/26,TBD,TBD,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,"25-02-2026 : This will be a seperate use case
+18-02-2026 : Rakhee will check the feasibility of clubbing #10 and this #23",Check with Vinoth,,,,,,
+26,IBC,Improved NLP correlation logic - Risk Adjustment coding,"Enhance NLP correlation logic to determine common word string correlations for  uncertain diagnosis, pertinent negatives, abbreviations inavertedly being captured as active.",TBD,TBD,Customer,Unsolicited,On Hold,17/Feb/26,TBD,Sramona Senguptha,,Michael Gonzales,Sundeep Vijayanathan,,,TBD,"25-02-2026 : This will be a seperate use case,but IBC is currently working on enhancing the NLP logic.Will discuss with Jameela Lewis to understand the current status.
+18-02-2026 : Rakhee will check the feasibility of clubbing #10 and this #23",,,,,,,
+27,IBC,2025 IBC QRM Business Operations - Automatic e-mail generator for Overreaders,"Based on daily productivity report, over-reader creates a tracker for audits to include error/education feedbacks. This is being sent to respective coders manually through email manually. something that will reduce the daily work load of a overreader, mainly the process of emails, especially for errors.",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Sramona Senguptha,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,25-02-2026: This would be more approriate as a regular automtion or a enhanced feature in Accurisk.Michael willwork with UST BTS team to determine feasibility.,Check with Vinoth,,,,,,
+28,IBC,2025 IBC QRM Business Operations - Coding error segregation / prevention,"Over-reader manually tracks errors/education category. A tool to consolidate and trend errors may be beneficial for  calibration sessions. Error identification, error types (add, delete, revise, FYIs) to distinguish common errors committed to minimize or prevent them",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Sramona Senguptha,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,25-02-2026: This would be more approriate as a regular automtion /automated report generation..Michael will work with UST BTS team to determine feasibility.,Check with Vinoth,,,,,,
+29,IBC,2023 IBC UM Intake Services - Auth data entry web app,An app which can identify necessary information to be entered in faxtool based on fax image.,TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Sramona Senguptha,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,25-02-2026: This would be more approriate as a regular automtion /data entry.,Check with Vinoth,,,,,,
+30,IBC,2023 IBC UM Intake Services - Aerial member comparison,An app  that compares critical information if it matches the provided information in fax image.,TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Mugesh Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,25-02-2026: Data mismatches across different applications,Check with Vinoth,,,,,,
+31,IBC,ORMB - Ongoing IT & Bus Ops - Invoice Validation & APTC Assurance Engine,"An AI-powered pre-invoice control layer that validates premium, charges, and APTC eligibility before invoice generation, ensuring accuracy and timeliness
+
+Incorrect Invoice Charges
+Detects abnormal charge amounts vs:
+1. Plan configuration
+2. Historical invoices
+3. Member eligibility period 
+4. Flags duplicate, missing, or mis-rated charges
+Invoice Not Generated on Time
+Predicts invoice generation failures or delays based on: 
+1. Prior billing runs
+2. Proactively alerts operations before SLA breach
+3. Data readiness patterns
+
+APTC not applied
+1. Verifies APTC eligibility and effective dates
+2. Ensures correct APTC amount is applied to premium
+3. Detects missing, expired, or partially applied APTC
+4. Explains root cause (eligibility gap, data sync issue, config error)
+
+How It Integrates with IBC ORMB
+IBC ORMB Area         AI Role
+Premium Billing -      Validate premium calculation
+Invoicing       -              Pre-invoice accuracy check
+APTC Processing -    Eligibility & amount validation
+Adjustments     -         Recommend corrections
+Batch Processing-    Predict job delays/failures
+
+End-to-End Workflow
+1. ORMB prepares invoice date
+2. AI validates premium, charges, and APTC
+3. High-risk invoices flagged
+4. Auto-correct or manual review triggered
+5. Invoices generated accurately and on time.
+
+",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Mugesh Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,,Check with Vinoth,,,,,,
+32,IBC,IBC Payment Integrity - Itemized Bill Audit  Charge to Clinical Correlation (NLP),"NLP reads clinical notes and matchas them to billed line items.  AI matches Itemized bill charges with medical records and operative notes to confirm services were actually performed.  Identifies duplicate and overlapping services and auto calculates recoverable amounts. Generate clear, defensible explanations for each overcharge.",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Mugesh Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,,Check with Vinoth,,,,,,
+33,IBC,Provider Inquiries support - AI Document Understanding,Associate dealing mosting with predefined template which should be Collated & template to be feedback to AI which will put the response for the DRG value and calulation that makes accurate for pricing and documentation which can reduce the manual typing time reduce error by atleast max with no grammatical mistake and also increase efficiency for production,TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Mugesh Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,,Check with Vinoth,,,,,,
+34,IBC,Provider Credentialing - Automated Ticket Creation in Salesforce (PIE) – Credentialing Process,"Currently, provider tickets in Salesforce (PIE) are created manually, with associates validating provider data across multiple websites.
+Proposed Solution:
+•Configure a dedicated email address linked to Salesforce
+•Incoming provider emails automatically create tickets with data captured from the email body
+•Tickets can be searched easily using NPI, Tax ID, or Provider Name
+Benefits:
+•Eliminates manual ticket creation
+•Reduces human effort and data mismatch
+•Improves turnaround time and traceability",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Karthik Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,25-02-2026- Take it up with BTS team - a good automation candidate,Check with Vinoth,,,,,,
+35,IBC,2023 IBC TPA Claims Operation - Trigger-Based Claims Processing/Adjudication,"A review and repair guidelines document (spreadsheet) is being use to determine steps to resolve a claims trigger. More than 500 worksheet is present withn the document with unique steps per trigger
+AI-assisted processing/adjudication based on triggers’ SOP's (prompt-guided processing based on the Review & Repair Guideline spreadsheet). This tool will fully or partially automate required steps to be completed on a particular trigger – like checking Inter Plan Messaging System (Blue2),  member benefits (FOS), send email if other department’s input is needed to process the claim, etc. It can also create modified canned notes based on the result of the auto-adjudication.",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Karthik Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,25-02-2026- Tracy's team ic currently reveiwing the Claims workflow  for automation feasibility,Another team will be working on this and may not under AI club,,,,,,
+36,IBC,Benefit Configuration - Fixed Funding - New Setup/Renewal,"Team will search for the respective cost share details in a PDF and have to do it as a manual calculation and it applies for all subaccount and steps are repetitive.
+
+If we can develop an AI solution that could read/capture the rates from PDFs/images into the desired format with automated calculations, can be benficial 
+
+Challenge
+We are doing it manually by reading from PDF/Images. When there are more plans, it takes 15-20 minutes for a single subaccount. There are chances of human errors.
+
+Benefit
+Accurate, error free outputs, time savings
+",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Karthik Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,05-03-2026 : SmartOps is evaluating the feasibility,Another team will be working on this and may not under AI club,,,,,,
+37,IBC,Benefit Configuration - Custom Config,"Some benefits may differ from the mapped benefit. In such cases, we follow specific scenarios during custom coding. Currently, this process is handled manually, where we identify the applicable scenario and code accordingly.
+
+AI can analyze the scenario automatically and determine the right coding requirements.
+
+It can then generate or suggest the appropriate coding details, reducing manual effort and errors.
+
+Challenge
+Some benefits require custom coding depending on the specific scenario.
+It’s difficult to manually identify the exact scenario and write the appropriate coding details for each case.
+
+Benefits
+More accurate and faster forecasting",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Karthik Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,05-03-2026 : SmartOps is evaluating the feasibility,Another team will be working on this and may not under AI club,,,,,,
+38,IBC,Benefit Configuration - Custom Config,"Each benefit plan component has an associated weightage number, which is documented across different source files. Every time we code, we need to verify these values against the respective documents before coding in HRP
+
+An AI-powered solution that can interact with users via Q&A to gather necessary inputs.
+
+It can then calculate and assign the precise weightage for each benefit dynamically, ensuring accuracy and efficiency.
+
+ Can be clubbed along with the chat bot idea
+
+Challenge
+Each benefit has a unique weightage that must be calculated.
+Determining the exact weightage manually is time-consuming and prone to inconsistencies.
+
+Benefits
+Faster responses, reduced workload
+",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Karthik Rajan ,TBD,Michael Gonzales,Rakhee Remadevi,TBD,TBD,TBD,05-03-2026 : SmartOps is evaluating the feasibility,Another team will be working on this and may not under AI club,,,,,,
+39,IBC,AI Knowledge Base on Payer Domain,,TBD,Medium,Internal,Internal,Usecase Finalization,5/Mar/26,TBD,TBD,TBD,Neeta Kuriakose,Rakhee Remadevi,TBD,TBD,TBD,08-03-2026 : Neeta raised the Idea. Naseer spoke to Minu Sebastian and requested to send mail to Ashok Nair to work on this.,,,,,,,
+40,PHT - CarynHealth,AI-Based Predictive KPI Dashboard (Commission & Sales Analytics),"Agencies lack predictive insights for revenue and performance planning.
+
+Sales prediction based on enrollment & commission cycle
+Revenue forecast (Monthly/Quarterly/Yearly)
+Retention rate & cancellation rate analysis
+Predictive dashboard using historical data
+AI-powered interactive chatbot for revenue/commission insights
+Expandable AI assistant for broader system integration",TBD,Medium,Customer,Unsolicited,Usecase Finalization,16/Feb/26,TBD,Arjun Gunda,"1.Muhammed Mishab
+2. Sumadhava Anand Gudi
+3. Ankit Kumar",Manoj Venugopalan Nair,Manoj Venugopalan Nair,3,3,TBD,18-02-2026 : Consult with Vinoth and check if the solution is already there,,,,,,,
+41,PHT - CarynHealth,AI-Powered Quick Quote & Plan Recommendation,"Members struggle to choose the right healthcare plan.
+
+Quick Quote feature based on family structure & needs
+AI-based plan recommendation engine
+Intelligent assistant to suggest best-fit policy and premium",TBD,Medium,Customer,Unsolicited,Usecase Finalization,16/Feb/26,TBD,Arjun Gunda,"1.Muhammed Mishab
+2. Sumadhava Anand Gudi
+3. Ankit Kumar",Manoj Venugopalan Nair,Manoj Venugopalan Nair,3,3,TBD,"05-03-2026 : Arjun can talk to Vinoth and decide the design and next steps. POC to be proceed with 
+18-02-2026 : Please check with Girish at IBC since the same feature is available in IBC portals. Check with Elevance contacts aswell.",,,,,,,
+42,PHT - Mckesson,FHIR to Non-FHIR  and vice versa conversion in Patient enrollment,"This usecase is to convert Non-FHIR standard JSON templates into FHIR standard templates and vice versa. The FHIR stands for Fast Healthcare Interoperability Resources is a JSON file that contains information about resources(eg : Patient, insurance, organization, practitioner etc) that is used for enrollment. To convert the non-FHIR json to FHIR json, the fields need to be mapped between these two json first. But the challenge in this is, the non-FHIR json is not a standard json as the structure of the json varies as it comes from different sources.",TBD,Medium,Customer,Unsolicited,Usecase Finalization,20/Feb/26,TBD,Rakesh Kandukkuri,"1. Anirban Das
+2. Sumadhava Anand Gudi
+3. Ankit Kumar",Nidhin Radhakrishnan,Naseer Abida,3,3,TBD,"26-02-2026: Try for one project and then go for a  geneic solution. Also, Rakesh needs to talk to Vinoth.
+20-02-2026 : Received AI use case from Sreedevi",,,,,,,
+42,,,,,,,,,,,,,,,,,,,,,,,,,
+43,,,,,,,,,,,,,,,,,,,,,,,,,
+44,,,,,,,,,,,,,,,,,,,,,,,,,
+45,,,,,,,,,,,,,,,,,,,,,,,,,
+46,,,,,,,,,,,,,,,,,,,,,,,,,
+47,,,,,,,,,,,,,,,,,,,,,,,,,
+48,,,,,,,,,,,,,,,,,,,,,,,,,
+49,,,,,,,,,,,,,,,,,,,,,,,,,
+50,,,,,,,,,,,,,,,,,,,,,,,,,
+51,,,,,,,,,,,,,,,,,,,,,,,,,
+52,,,,,,,,,,,,,,,,,,,,,,,,,
+53,,,,,,,,,,,,,,,,,,,,,,,,,
+54,,,,,,,,,,,,,,,,,,,,,,,,,
+55,,,,,,,,,,,,,,,,,,,,,,,,,
+56,,,,,,,,,,,,,,,,,,,,,,,,,
+57,,,,,,,,,,,,,,,,,,,,,,,,,
+42,,Add the use case from Neeta,,,,,,,,,,,,,,,,,,,,,,,

@@ -1,15 +1,20 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { AppLayout } from "@/components/AppLayout";
-import { useRole } from "@/contexts/RoleContext";
-import { UseCase } from "@/types";
-import { seedUseCases } from "@/data/seed-data";
-import { StatusBadge, PriorityBadge } from "@/components/StatusBadge";
+import { UseCase, STATUS_OPTIONS, USE_CASE_TYPES, UseCaseStatus, UseCaseType } from "@/types";
+import { StatusBadge, TypeBadge } from "@/components/StatusBadge";
 import { UseCaseDialog } from "@/components/UseCaseDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, Columns3, Pencil, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,270 +25,314 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-type SortDir = "asc" | "desc" | null;
-
-interface ColumnDef {
-  key: keyof UseCase;
-  label: string;
-  visible: boolean;
-  width: number;
-}
-
-const defaultColumns: ColumnDef[] = [
-  { key: "title", label: "Title", visible: true, width: 220 },
-  { key: "description", label: "Description", visible: true, width: 280 },
-  { key: "category", label: "Category", visible: true, width: 130 },
-  { key: "status", label: "Status", visible: true, width: 110 },
-  { key: "priority", label: "Priority", visible: true, width: 100 },
-  { key: "owner", label: "Owner", visible: true, width: 140 },
-  { key: "department", label: "Department", visible: true, width: 140 },
-  { key: "estimatedImpact", label: "Est. Impact", visible: true, width: 170 },
-  { key: "dateCreated", label: "Date Created", visible: true, width: 120 },
-];
+import { Plus, Search, Pencil, Trash2, Upload, Download, FileDown } from "lucide-react";
+import { parseExcelFile, downloadTemplate, exportToExcel, ParsedRow } from "@/lib/excel-utils";
+import { useToast } from "@/hooks/use-toast";
+import { useUseCases, useCreateUseCase, useUpdateUseCase, useDeleteUseCase } from "@/hooks/useUseCases";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function UseCases() {
-  const { canEdit } = useRole();
-  const [useCases, setUseCases] = useState<UseCase[]>(seedUseCases);
-  const [columns, setColumns] = useState<ColumnDef[]>(defaultColumns);
   const [search, setSearch] = useState("");
-  const [sortKey, setSortKey] = useState<keyof UseCase | null>(null);
-  const [sortDir, setSortDir] = useState<SortDir>(null);
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterType, setFilterType] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingUseCase, setEditingUseCase] = useState<UseCase | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [bulkPreview, setBulkPreview] = useState<ParsedRow[] | null>(null);
+  const [bulkMode, setBulkMode] = useState<"append" | "replace">("append");
+  const [isDragging, setIsDragging] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
-  // Resizing state
-  const [resizing, setResizing] = useState<{ index: number; startX: number; startWidth: number } | null>(null);
+  // API hooks
+  const { data: response, isLoading } = useUseCases();
+  const useCases = response?.data ?? [];
+  
+  const createMutation = useCreateUseCase({
+    onSuccess: () => {
+      toast({ title: "Use case added!" });
+      setDialogOpen(false);
+      setEditingUseCase(null);
+    },
+    onError: (err) => {
+      toast({ title: "Failed to create use case", description: err.message, variant: "destructive" });
+    },
+  });
 
-  const visibleColumns = columns.filter((c) => c.visible);
+  const updateMutation = useUpdateUseCase({
+    onSuccess: () => {
+      toast({ title: "Use case updated!" });
+      setDialogOpen(false);
+      setEditingUseCase(null);
+    },
+    onError: (err) => {
+      toast({ title: "Failed to update use case", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const deleteMutation = useDeleteUseCase({
+    onSuccess: () => {
+      toast({ title: "Use case deleted", variant: "destructive" });
+      setDeleteId(null);
+    },
+    onError: (err) => {
+      toast({ title: "Failed to delete use case", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const handleSave = (data: Omit<UseCase, "id">) => {
+    if (editingUseCase) {
+      updateMutation.mutate({ id: editingUseCase.id, data });
+    } else {
+      createMutation.mutate(data);
+    }
+  };
+
+  const handleEdit = (uc: UseCase) => {
+    setEditingUseCase(uc);
+    setDialogOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate(id);
+  };
+
+  const handleFileUpload = async (file: File) => {
+    try {
+      const parsed = await parseExcelFile(file);
+      setBulkPreview(parsed);
+    } catch (error: any) {
+      toast({ title: "Failed to parse file", description: error.message, variant: "destructive" });
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileUpload(file);
+  };
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleFileUpload(file);
+    e.target.value = "";
+  };
+
+  const confirmImport = () => {
+    if (!bulkPreview) return;
+
+    // Import all rows that have at least account OR project — skip only fully empty rows.
+    // Apply fallback defaults for unknown status/type values.
+    const importableRows = bulkPreview
+      .filter((row) => row.data.account || row.data.project)
+      .map((row) => {
+        const data = { ...row.data };
+        // Fallback: if status is unknown/missing, default to first valid status
+        if (!data.status || !STATUS_OPTIONS.includes(data.status as any)) {
+          data.status = "Use case finalization";
+        }
+        // Fallback: if useCaseType is unknown/missing, default to "Unsolicited"
+        if (!data.useCaseType || !USE_CASE_TYPES.includes(data.useCaseType as any)) {
+          data.useCaseType = "Unsolicited";
+        }
+        return data;
+      }) as Omit<UseCase, "id">[];
+
+    // Create each use case via API
+    importableRows.forEach((row) => {
+      createMutation.mutate(row);
+    });
+
+    setBulkPreview(null);
+
+    const skippedCount = bulkPreview.length - importableRows.length;
+    toast({
+      title: `Importing ${importableRows.length} use cases${skippedCount > 0 ? ` (${skippedCount} empty rows skipped)` : ""}`,
+    });
+  };
 
   const filtered = useMemo(() => {
-    let data = useCases;
-    if (search) {
-      const q = search.toLowerCase();
-      data = data.filter((uc) =>
-        Object.values(uc).some((v) => String(v).toLowerCase().includes(q))
-      );
-    }
-    if (sortKey && sortDir) {
-      data = [...data].sort((a, b) => {
-        const av = String(a[sortKey]).toLowerCase();
-        const bv = String(b[sortKey]).toLowerCase();
-        return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
-      });
-    }
-    return data;
-  }, [useCases, search, sortKey, sortDir]);
-
-  const handleSort = (key: keyof UseCase) => {
-    if (sortKey === key) {
-      setSortDir(sortDir === "asc" ? "desc" : sortDir === "desc" ? null : "asc");
-      if (sortDir === "desc") setSortKey(null);
-    } else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-  };
-
-  const toggleColumn = (key: keyof UseCase) => {
-    setColumns((cols) => cols.map((c) => (c.key === key ? { ...c, visible: !c.visible } : c)));
-  };
-
-  const handleSave = (data: Omit<UseCase, "id" | "dateCreated">) => {
-    if (editingUseCase) {
-      setUseCases((prev) => prev.map((uc) => (uc.id === editingUseCase.id ? { ...uc, ...data } : uc)));
-    } else {
-      const newUc: UseCase = {
-        ...data,
-        id: `uc-${Date.now()}`,
-        dateCreated: new Date().toISOString().split("T")[0],
-      };
-      setUseCases((prev) => [...prev, newUc]);
-    }
-    setEditingUseCase(null);
-  };
-
-  const handleDelete = () => {
-    if (deleteId) {
-      setUseCases((prev) => prev.filter((uc) => uc.id !== deleteId));
-      setDeleteId(null);
-    }
-  };
-
-  const handleResizeStart = (e: React.MouseEvent, index: number) => {
-    e.preventDefault();
-    const startX = e.clientX;
-    const startWidth = columns.findIndex((c) => c.visible && columns.filter((cc) => cc.visible).indexOf(c) === index) >= 0
-      ? visibleColumns[index].width
-      : 100;
-
-    const colKey = visibleColumns[index].key;
-
-    const handleMouseMove = (ev: MouseEvent) => {
-      const diff = ev.clientX - startX;
-      setColumns((cols) =>
-        cols.map((c) => (c.key === colKey ? { ...c, width: Math.max(60, startWidth + diff) } : c))
-      );
-    };
-    const handleMouseUp = () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-      setResizing(null);
-    };
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-    setResizing({ index, startX, startWidth });
-  };
-
-  // Drag reorder
-  const [dragIndex, setDragIndex] = useState<number | null>(null);
-
-  const handleDragStart = (index: number) => setDragIndex(index);
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    if (dragIndex === null || dragIndex === index) return;
-    const visKeys = visibleColumns.map((c) => c.key);
-    const newCols = [...columns];
-    const fromKey = visKeys[dragIndex];
-    const toKey = visKeys[index];
-    const fromIdx = newCols.findIndex((c) => c.key === fromKey);
-    const toIdx = newCols.findIndex((c) => c.key === toKey);
-    const [moved] = newCols.splice(fromIdx, 1);
-    newCols.splice(toIdx, 0, moved);
-    setColumns(newCols);
-    setDragIndex(index);
-  };
-  const handleDragEnd = () => setDragIndex(null);
-
-  const renderCell = (uc: UseCase, key: keyof UseCase) => {
-    if (key === "status") return <StatusBadge status={uc.status} />;
-    if (key === "priority") return <PriorityBadge priority={uc.priority} />;
-    if (key === "description") return <span className="line-clamp-2 text-xs">{uc.description}</span>;
-    return <span className="text-sm">{String(uc[key])}</span>;
-  };
-
-  const SortIcon = ({ colKey }: { colKey: keyof UseCase }) => {
-    if (sortKey !== colKey) return <ArrowUpDown className="h-3 w-3 opacity-30" />;
-    return sortDir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />;
-  };
+    return useCases.filter((uc) => {
+      const matchesSearch =
+        !search ||
+        [uc.account, uc.project, uc.description, uc.useCaseOwner].some((v) =>
+          v?.toLowerCase().includes(search.toLowerCase())
+        );
+      const matchesStatus = filterStatus === "all" || uc.status === filterStatus;
+      const matchesType = filterType === "all" || uc.useCaseType === filterType;
+      return matchesSearch && matchesStatus && matchesType;
+    });
+  }, [useCases, search, filterStatus, filterType]);
 
   return (
     <AppLayout title="Use Cases">
       <div className="space-y-4">
         {/* Toolbar */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search use cases..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-9"
-            />
+          <div className="flex items-center gap-2 flex-1">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search use cases..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                {STATUS_OPTIONS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={filterType} onValueChange={setFilterType}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="All Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                {USE_CASE_TYPES.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Columns3 className="h-4 w-4 mr-1.5" />
-                  Columns
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-card z-50 w-48">
-                {columns.map((col) => (
-                  <DropdownMenuCheckboxItem
-                    key={col.key}
-                    checked={col.visible}
-                    onCheckedChange={() => toggleColumn(col.key)}
-                  >
-                    {col.label}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {canEdit && (
-              <Button size="sm" onClick={() => { setEditingUseCase(null); setDialogOpen(true); }}>
-                <Plus className="h-4 w-4 mr-1.5" />
-                New Use Case
-              </Button>
-            )}
+            <Button variant="outline" size="sm" onClick={downloadTemplate}>
+              <FileDown className="h-4 w-4 mr-1.5" />
+              Template
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fileRef.current?.click()}
+            >
+              <Upload className="h-4 w-4 mr-1.5" />
+              Import
+            </Button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              className="hidden"
+              onChange={handleFileInput}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportToExcel(useCases)}
+              disabled={useCases.length === 0}
+            >
+              <Download className="h-4 w-4 mr-1.5" />
+              Export
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => {
+                setEditingUseCase(null);
+                setDialogOpen(true);
+              }}
+            >
+              <Plus className="h-4 w-4 mr-1.5" />
+              New Use Case
+            </Button>
           </div>
         </div>
 
-        {/* Grid */}
-        <Card className="overflow-hidden border">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-12 w-full" />
+            ))}
+          </div>
+        ) : (
+        <>
+        {/* Table */}
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Account</TableHead>
+                <TableHead>Project</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Logged</TableHead>
+                <TableHead>End Date</TableHead>
+                <TableHead>Owner</TableHead>
+                <TableHead>Effort</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.length === 0 ? (
                 <TableRow>
-                  {visibleColumns.map((col, i) => (
-                    <TableHead
-                      key={col.key}
-                      style={{ width: col.width, minWidth: col.width }}
-                      className="relative select-none group"
-                      draggable
-                      onDragStart={() => handleDragStart(i)}
-                      onDragOver={(e) => handleDragOver(e, i)}
-                      onDragEnd={handleDragEnd}
-                    >
-                      <button
-                        className="flex items-center gap-1.5 text-xs font-medium w-full"
-                        onClick={() => handleSort(col.key)}
-                      >
-                        {col.label}
-                        <SortIcon colKey={col.key} />
-                      </button>
-                      {/* Resize handle */}
-                      <div
-                        className="absolute right-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-primary/30"
-                        onMouseDown={(e) => handleResizeStart(e, i)}
-                      />
-                    </TableHead>
-                  ))}
-                  {canEdit && <TableHead className="w-[80px]">Actions</TableHead>}
+                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    No use cases found.
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={visibleColumns.length + (canEdit ? 1 : 0)} className="text-center py-8 text-muted-foreground">
-                      No use cases found.
+              ) : (
+                filtered.map((uc) => (
+                  <TableRow key={uc.id}>
+                    <TableCell className="font-medium">{uc.account}</TableCell>
+                    <TableCell>{uc.project}</TableCell>
+                    <TableCell>
+                      <TypeBadge type={uc.useCaseType} />
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status={uc.status} />
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{uc.loggedDate}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {uc.plannedEndDate || "—"}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{uc.useCaseOwner}</TableCell>
+                    <TableCell className="text-muted-foreground">{uc.effort}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => handleEdit(uc)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive"
+                          onClick={() => setDeleteId(uc.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
-                ) : (
-                  filtered.map((uc) => (
-                    <TableRow key={uc.id} className="hover:bg-muted/50">
-                      {visibleColumns.map((col) => (
-                        <TableCell key={col.key} style={{ maxWidth: col.width }} className="truncate">
-                          {renderCell(uc, col.key)}
-                        </TableCell>
-                      ))}
-                      {canEdit && (
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditingUseCase(uc); setDialogOpen(true); }}>
-                              <Pencil className="h-3.5 w-3.5" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => setDeleteId(uc.id)}>
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </Card>
 
         <p className="text-xs text-muted-foreground">
-          Showing {filtered.length} of {useCases.length} use cases • Drag column headers to reorder • Drag column edges to resize
+          Showing {filtered.length} of {useCases.length} use cases
         </p>
+        </>
+        )}
       </div>
 
+      {/* Dialog */}
       <UseCaseDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
@@ -291,22 +340,99 @@ export default function UseCases() {
         onSave={handleSave}
       />
 
+      {/* Delete Confirmation */}
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
-        <AlertDialogContent className="bg-card">
+        <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Use Case</AlertDialogTitle>
-            <AlertDialogDescription>Are you sure? This action cannot be undone.</AlertDialogDescription>
+            <AlertDialogTitle>Delete this use case?</AlertDialogTitle>
+            <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
+            <AlertDialogAction onClick={() => deleteId && handleDelete(deleteId)}>
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Bulk Import Preview */}
+      {bulkPreview && (
+        <AlertDialog open={!!bulkPreview} onOpenChange={() => setBulkPreview(null)}>
+          <AlertDialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Import Preview</AlertDialogTitle>
+              <AlertDialogDescription>
+                {bulkPreview.filter((r) => r.data.account || r.data.project).length} importable rows,{" "}
+                {bulkPreview.filter((r) => !r.data.account && !r.data.project).length} empty rows skipped
+                {bulkPreview.some((r) => r.errors.length > 0) && (
+                  <span className="text-yellow-600">
+                    {" "}· {bulkPreview.filter((r) => r.errors.length > 0).length} rows have warnings (will be imported with defaults)
+                  </span>
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <Button
+                  variant={bulkMode === "append" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setBulkMode("append")}
+                >
+                  Append ({useCases.length} existing)
+                </Button>
+                <Button
+                  variant={bulkMode === "replace" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setBulkMode("replace")}
+                >
+                  Replace All
+                </Button>
+              </div>
+              <div className="max-h-[400px] overflow-y-auto border rounded">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Row</TableHead>
+                      <TableHead>Account</TableHead>
+                      <TableHead>Project</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Issues</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {bulkPreview.map((row, idx) => (
+                      <TableRow key={idx} className={row.errors.length > 0 ? "bg-destructive/10" : ""}>
+                        <TableCell>{row.rowNum}</TableCell>
+                        <TableCell>{row.data.account || "—"}</TableCell>
+                        <TableCell>{row.data.project || "—"}</TableCell>
+                        <TableCell>{row.data.useCaseType || "—"}</TableCell>
+                        <TableCell>{row.data.status || "—"}</TableCell>
+                        <TableCell>
+                          {row.errors.length === 0 ? (
+                            <span className="text-green-600">✓ OK</span>
+                          ) : (
+                            <span className="text-destructive text-xs">
+                              {row.errors.map((e) => e.message).join(", ")}
+                            </span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmImport}>
+                Import {bulkPreview.filter((r) => r.data.account || r.data.project).length} Records
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </AppLayout>
   );
-}
-
-function Card({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={`rounded-lg bg-card shadow-sm ${className || ""}`} {...props}>{children}</div>;
 }

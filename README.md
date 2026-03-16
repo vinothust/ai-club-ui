@@ -1,73 +1,227 @@
-# Welcome to your Lovable project
+# AI Idea Hub
 
-## Project info
+A modern React application for managing AI use cases and ideas, featuring a complete API service layer and comprehensive backend integration documentation.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Features
 
-## How can I edit this code?
+- ✅ **Use Case Management**: Create, read, update, and delete AI use cases
+- ✅ **User Management**: Manage users with role-based access control
+- ✅ **Dashboard Analytics**: Visual insights and statistics
+- ✅ **API Service Layer**: Production-ready service architecture
+- ✅ **Type-Safe**: Full TypeScript support
+- ✅ **Modern UI**: Built with shadcn/ui and Tailwind CSS
+- ✅ **Authentication**: JWT-based authentication ready
+- ✅ **Data Fetching**: TanStack Query for efficient data management
 
-There are several ways of editing your application.
+## 📚 Documentation
 
-**Use Lovable**
+### API Documentation
+- 📖 **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** - Complete API specifications (18+ pages)
+  - All endpoint definitions
+  - Request/response examples
+  - Authentication flows
+  - Backend implementation guides (Node.js & Python)
+  - Database schemas
+  - Security best practices
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- 📋 **[API_QUICK_REFERENCE.md](./API_QUICK_REFERENCE.md)** - Quick start guide
+  - Common usage patterns
+  - Hook examples
+  - Quick reference for endpoints
 
-Changes made via Lovable will be committed automatically to this repo.
+- 💻 **[BACKEND_EXAMPLES.md](./BACKEND_EXAMPLES.md)** - Ready-to-use backend code
+  - Complete Express.js setup
+  - Controller implementations
+  - Database connection examples
+  - Docker configuration
 
-**Use your preferred IDE**
+- 📊 **[ARCHITECTURE_DIAGRAM.md](./ARCHITECTURE_DIAGRAM.md)** - Visual architecture
+  - System diagrams
+  - Data flow examples
+  - Technology stack overview
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- ✅ **[API_IMPLEMENTATION_SUMMARY.md](./API_IMPLEMENTATION_SUMMARY.md)** - Implementation status
+  - What's been implemented
+  - File structure
+  - Quick verification checklist
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🛠️ Technologies
 
-Follow these steps:
+### Frontend
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **TanStack Query** - Data fetching and caching
+- **React Router** - Routing
+- **shadcn/ui** - UI components
+- **Tailwind CSS** - Styling
+- **Recharts** - Data visualization
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+### Backend Ready
+- **Node.js + Express** (examples provided)
+- **Python + FastAPI** (examples provided)
+- **PostgreSQL** (schema provided)
+- **JWT Authentication** (documented)
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+### Frontend Installation
+
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Navigate to the project directory
+cd ai-idea-hub
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Copy environment variables
+cp .env.example .env
+
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Backend Setup
 
-**Use GitHub Codespaces**
+See **[BACKEND_EXAMPLES.md](./BACKEND_EXAMPLES.md)** for complete backend implementation guide.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Quick start:
+```bash
+# Set your API URL in .env
+VITE_API_BASE_URL=http://localhost:3000/api
+```
 
-## What technologies are used for this project?
+## 📦 Available Scripts
 
-This project is built with:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm test` - Run tests
+- `npm run test:watch` - Run tests in watch mode
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🏗️ Project Structure
 
-## How can I deploy this project?
+```
+ai-idea-hub/
+├── src/
+│   ├── services/          # API service layer (NEW)
+│   │   ├── api.config.ts
+│   │   ├── api.client.ts
+│   │   ├── useCases.service.ts
+│   │   ├── users.service.ts
+│   │   ├── auth.service.ts
+│   │   └── dashboard.service.ts
+│   │
+│   ├── hooks/             # Custom React hooks (NEW)
+│   │   ├── useUseCases.ts
+│   │   ├── useUsers.ts
+│   │   ├── useDashboard.ts
+│   │   └── useAuth.ts
+│   │
+│   ├── components/        # React components
+│   ├── pages/            # Page components
+│   ├── types/            # TypeScript types
+│   ├── contexts/         # React contexts
+│   └── lib/              # Utilities
+│
+├── public/               # Static assets
+│
+└── Documentation/        # Complete API docs
+    ├── API_DOCUMENTATION.md
+    ├── API_QUICK_REFERENCE.md
+    ├── BACKEND_EXAMPLES.md
+    ├── ARCHITECTURE_DIAGRAM.md
+    └── API_IMPLEMENTATION_SUMMARY.md
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## 🔧 API Integration
 
-## Can I connect a custom domain to my Lovable project?
+### Using the Service Layer
 
-Yes, you can!
+```typescript
+import { useUseCases, useCreateUseCase } from '@/hooks/useUseCases';
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+function MyComponent() {
+  // Fetch data
+  const { data, isLoading } = useUseCases({ status: 'Active' });
+  
+  // Mutations
+  const createMutation = useCreateUseCase({
+    onSuccess: () => console.log('Created!'),
+  });
+  
+  return <div>...</div>;
+}
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+See **[API_QUICK_REFERENCE.md](./API_QUICK_REFERENCE.md)** for more examples.
+
+## 📊 API Endpoints
+
+The application is ready to integrate with 29 API endpoints:
+
+- **Authentication**: 4 endpoints (login, logout, refresh, current user)
+- **Use Cases**: 11 endpoints (CRUD + bulk operations)
+- **Users**: 11 endpoints (CRUD + role management)
+- **Dashboard**: 3 endpoints (stats, charts, activity)
+
+See **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** for complete specifications.
+
+## 🔐 Security Features
+
+- JWT-based authentication
+- Role-based access control (viewer, editor, admin)
+- Secure token storage
+- Request timeout handling
+- CORS configuration
+- Input validation ready
+
+## 🎯 Next Steps
+
+1. **Build the Backend API** - Use examples in [BACKEND_EXAMPLES.md](./BACKEND_EXAMPLES.md)
+2. **Configure Environment** - Set `VITE_API_BASE_URL` in `.env`
+3. **Update Components** - Replace local state with API hooks
+4. **Test Integration** - Verify all endpoints work correctly
+5. **Deploy** - Deploy both frontend and backend
+
+## 📖 Additional Resources
+
+- [React Documentation](https://react.dev)
+- [TanStack Query](https://tanstack.com/query)
+- [shadcn/ui](https://ui.shadcn.com)
+- [Tailwind CSS](https://tailwindcss.com)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 💡 Support
+
+For detailed implementation help:
+- Check the documentation files listed above
+- Review service files in `src/services/`
+- Examine hook implementations in `src/hooks/`
+- See backend examples in [BACKEND_EXAMPLES.md](./BACKEND_EXAMPLES.md)
+
+---
+
+**Status**: ✅ Frontend Complete | ⏳ Backend Ready to Build
+
+The frontend is production-ready with a complete API service layer. Follow the documentation to build and integrate the backend API.

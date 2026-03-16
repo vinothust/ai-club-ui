@@ -1,6 +1,7 @@
-import { LayoutDashboard, Lightbulb, Users, BrainCircuit } from "lucide-react";
+import { LayoutDashboard, Lightbulb, Users, BrainCircuit, FileText, TrendingUp } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useRole } from "@/contexts/RoleContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Sidebar,
   SidebarContent,
@@ -17,10 +18,13 @@ import {
 const navItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Use Cases", url: "/use-cases", icon: Lightbulb },
+  { title: "Report", url: "/report", icon: FileText },
+  { title: "Manager Insights", url: "/insights", icon: TrendingUp },
 ];
 
 export function AppSidebar() {
   const { canManageUsers, role } = useRole();
+  const { user } = useAuth();
 
   return (
     <Sidebar>
@@ -30,8 +34,8 @@ export function AppSidebar() {
             <BrainCircuit className="h-4.5 w-4.5 text-sidebar-primary-foreground" />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-sidebar-foreground">AI Registry</h2>
-            <p className="text-[10px] text-sidebar-foreground/60">Use Case Management</p>
+            <h2 className="text-md font-semibold text-sidebar-foreground">AI Club</h2>
+            <p className="text-sm text-sidebar-foreground/60">Use Case Management</p>
           </div>
         </div>
       </SidebarHeader>
@@ -71,11 +75,11 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-sidebar-border p-4">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent text-xs font-medium text-sidebar-accent-foreground">
-            {role === "admin" ? "A" : role === "editor" ? "E" : "V"}
+            {user?.name ? user.name.charAt(0).toUpperCase() : role === "admin" ? "A" : role === "editor" ? "E" : "V"}
           </div>
           <div>
             <p className="text-xs font-medium text-sidebar-foreground">
-              {role === "admin" ? "Admin User" : role === "editor" ? "Editor User" : "Viewer User"}
+              {user?.name || (role === "admin" ? "Admin User" : role === "editor" ? "Editor User" : "Viewer User")}
             </p>
             <p className="text-[10px] text-sidebar-foreground/60 capitalize">{role} Access</p>
           </div>
